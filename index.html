@@ -258,18 +258,6 @@ VISI DAN MISI SECTION END
         PORTFOLIO SECTION END
         =========================== -->
         <!-- Blog Section -->
-<section id="blog" class="section text-center section-padding">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="arrow">Latest News & Opinions</h1>
-                <div class="row" id="articles-list">
-                    <!-- Articles will be displayed here -->
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
     <!-- ==========================
         BLOG SECTION 
         =========================== -->
@@ -594,31 +582,5 @@ VISI DAN MISI SECTION END
       speed: 2000 // How many milliseconds until the next word show.
     });
 </script>
-// js/display-articles.js
-document.addEventListener('DOMContentLoaded', function() {
-    const articlesList = document.getElementById('articles-list');
-    let articles = localStorage.getItem('articles');
-
-    if (articles) {
-        articles = JSON.parse(articles);
-        articles.forEach((article, index) => {
-            const articleDiv = document.createElement('div');
-            articleDiv.className = 'col-md-4';
-            articleDiv.innerHTML = `
-                <div class="card mb-4">
-                    ${article.thumbnailUrl ? `<img src="${article.thumbnailUrl}" class="card-img-top" alt="${article.imageAlt}">` : ''}
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="blog-single.html?article=${index}" title="${article.metaTitle}">${article.title}</a></h5>
-                        <p class="card-text">${article.content.substring(0, 100)}...</p>
-                        <p class="card-text"><small class="text-muted">Category: ${article.category}</small></p>
-                        <p class="card-text"><small class="text-muted">Published on ${article.date}</small></p>
-                    </div>
-                </div>
-            `;
-            articlesList.appendChild(articleDiv);
-        });
-    } else {
-        articlesList.innerHTML = '<p>No articles found.</p>';
-    }
     </body>
 </html>
