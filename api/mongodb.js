@@ -1,10 +1,14 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
+// Ambil URI dari variabel lingkungan
 const uri = process.env.MONGODB_URI;
+
+// Pastikan URI tidak undefined
 if (!uri) {
   throw new Error('Please add your Mongo URI to .env.local or Vercel Environment Variables');
 }
 
+// Buat klien MongoDB
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
