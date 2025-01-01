@@ -1,6 +1,9 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
+if (!uri) {
+  throw new Error('Please add your Mongo URI to .env.local or Vercel Environment Variables');
+}
 
 const client = new MongoClient(uri, {
   serverApi: {
