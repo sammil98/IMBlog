@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +8,10 @@
     <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animate.css">
-</head>
 
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script type="module" src="js/firebase-config.js"></script>
+</head>
 <body>
     <!-- Header -->
     <header class="header">
@@ -50,37 +51,8 @@
             </div>
             <br><br>
             <!-- Blog Entries -->
-            <div class="row">
-                <div class="col-md-4 wp4">
-                    <div class="overlay-effect effects clearfix">
-                        <div class="img">
-                            <a href="blog-single.html"><img src="img/blog1.jpg" class="grayscale" alt="Blog Item"></a>
-                        </div>
-                    </div>
-                    <br>
-                    <h2>Creative Minds</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ultricies nulla non metus pulvinar imperdiet. Praesent non adipiscing libero.</p>
-                </div>
-                <div class="col-md-4 wp4 delay-05s">
-                    <div class="overlay-effect effects clearfix">
-                        <div class="img">
-                            <a href="blog-single.html"><img src="img/blog2.jpg" class="grayscale" alt="Blog Item"></a>
-                        </div>
-                    </div>
-                    <br>
-                    <h2>Creative Hearts</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ultricies nulla non metus pulvinar imperdiet. Praesent non adipiscing libero.</p>
-                </div>
-                <div class="col-md-4 wp4 delay-1s">
-                    <div class="overlay-effect effects clearfix">
-                        <div class="img">
-                            <a href="blog-single.html"><img src="img/blog3.jpg" class="grayscale" alt="Blog Item"></a>
-                        </div>
-                    </div>
-                    <br>
-                    <h2>Creative Ideas</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ultricies nulla non metus pulvinar imperdiet. Praesent non adipiscing libero.</p>
-                </div>
+            <div class="row" id="blog-posts">
+                <!-- Blog entries will be dynamically inserted here -->
             </div>
         </div>
     </section>
@@ -103,6 +75,47 @@
     <script src="js/classie.js"></script>
     <script src="assets/textrotator/jquery.simple-text-rotator.js"></script>
     <script src="js/main.js"></script>
-</body>
 
+    <!-- Firebase Firestore Integration -->
+    <script type="module">
+        import { db } from './js/firebase-config.js';
+        import { collection, getDocs, orderBy, query } from "firebase/firestore";
+
+        // Function to get posts from Firestore
+        async function getPosts() {
+            const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
+            const querySnapshot = await getDocs(q);
+            const posts = [];
+            querySnapshot.forEach(doc => {
+                posts.push({ id: doc.id, ...doc.data() });
+            });
+            return posts;
+        }
+
+        // Function to display posts
+        function displayPosts(posts) {
+            const blogPostsContainer = document.getElementById('blog-posts');
+            blogPostsContainer.innerHTML = ''; // Clear existing content
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'col-md-4 wp4';
+                postElement.innerHTML = `
+                    <div class="overlay-effect effects clearfix">
+                        <div class="img">
+                            <a href="#"><img src="${post.image}" class="grayscale" alt="Blog Item"></a>
+                        </div>
+                    </div>
+                    <br>
+                    <h2>${post.title}</h2>
+                    <p>${post.content.substring(0, 100)}...</p>
+                    <p><strong>By: ${post.author}</strong></p>
+                `;
+                blogPostsContainer.appendChild(postElement);
+            });
+        }
+
+        // Call function to display posts
+        getPosts().then(displayPosts);
+    </script>
+</body>
 </html>
