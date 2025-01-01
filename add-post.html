@@ -93,7 +93,7 @@
 
       try {
         // Save article to Firestore
-        const docRef = await addDoc(collection(db, 'posts'), {
+        await addDoc(collection(db, 'posts'), {
           title: title,
           content: content,
           image: image,

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,17 +80,16 @@
     <!-- Firebase Firestore Integration -->
     <script type="module">
         import { db } from './js/firebase-config.js';
-        import { collection, getDocs, orderBy, query } from "firebase/firestore";
+        import { collection, getDocs } from "firebase/firestore";
 
         // Function to get posts from Firestore
         async function getPosts() {
-            const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
-            const querySnapshot = await getDocs(q);
+            const querySnapshot = await getDocs(collection(db, 'posts'));
             const posts = [];
-            querySnapshot.forEach(doc => {
+            querySnapshot.forEach((doc) => {
                 posts.push({ id: doc.id, ...doc.data() });
             });
-            return posts;
+            displayPosts(posts);
         }
 
         // Function to display posts
@@ -115,7 +115,8 @@
         }
 
         // Call function to display posts
-        getPosts().then(displayPosts);
+        getPosts();
     </script>
 </body>
+
 </html>
