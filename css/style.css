@@ -1236,3 +1236,24 @@ ul.slides li {
 	    padding-bottom: 40px;
 	}
 }
+.blog-post {
+    margin-bottom: 40px;
+}
+
+.blog-post .post-media img {
+    width: 100%;
+    height: auto;
+}
+
+.blog-post .post-meta {
+    padding: 20px 0;
+}
+
+.blog-post .post-meta h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.blog-post .post-meta p {
+    font-size: 16px;
+}
