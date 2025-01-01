@@ -15,13 +15,45 @@ export default async function handler(req, res) {
     // Connect the client to the server
     await client.connect();
     
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // Log connection success
+    console.log("Connected to MongoDB");
 
-    res.status(200).json({ message: "Successfully connected to MongoDB!" });
+    // Check request method
+    if (req.method === 'POST') {
+      const { title, content, image, author } = req.body;
+      
+      // Log incoming data
+      console.log("Received data:", { title, content, image, author });
+
+      // Insert new post into the MongoDB collection
+      const db = client.db("your-database-name");
+      const collection = db.collection("posts");
+      const result = await collection.insertOne({
+        title, content, image, author, timestamp: new Date()
+      });
+      
+      // Log result
+      console.log("Insert result:", result);
+
+      res.status(201).json(result);
+    } else if (req.method === 'GET') {
+      // Retrieve posts from the MongoDB collection
+      const db = client.db("your-database-name");
+      const collection = db.collection("posts");
+      const posts = await collection.find({}).sort({ timestamp: -1 }).toArray();
+      
+      // Log posts
+      console.log("Retrieved posts:", posts);
+
+      res.status(200).json(posts);
+    } else {
+      res.setHeader("Allow", ["GET", "POST"]);
+      res.status(405).end(`Method ${req.method} Not Allowed`);
+    }
   } catch (error) {
+    // Log error
     console.error("MongoDB connection error:", error);
+    
     res.status(500).json({ message: "Failed to connect to MongoDB", error });
   } finally {
     // Ensures that the client will close when you finish/error
